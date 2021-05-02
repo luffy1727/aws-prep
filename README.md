@@ -144,7 +144,6 @@ Under the hood:
 - create new EBS volume from the snapshot
 - attach the volume to the original instance
 
-
 ##### Amazon Machine Images (AMI)
 - Customization for EC2 instances
     - Add your own software, config, OS, monitoring etc
@@ -155,7 +154,111 @@ Under the hood:
     - Own AMI
     - AWS marketplace AMI (kinda like github i guess)
 ##### EC2 Instance Store
-        - Basically a hard drive attached to the phyiscal server
+        - Basically a physical hard drive attached to the physical server
 - Better I/O performance since it is attached physically
 - If the attached EC2 instance is terminated the storage will be lost
 - Good for: buffer / cache/ scratch data / temp content
+## Day 3 notes:
+##### EBS RAID Options
+RAID is possible as long as your OS supports it.
+- RAID 0: to increase performance/ Risk more
+    ```
+    It basically adds 2 EBS volumes (size, IOPS and everything) to increase performance with a increased risk of failure, because if one of the disk fails everything fails.
+    ```
+![image](images/RAID0.png)
+- RAID 1: to increase fault tolerance
+    ```
+    It basically mirrors one EBS to another EBS by sending the data to both of them at the same time just like your ex-gf. 
+    ```
+![image](images/RAID1.png)
+###### DO NOT NEED TO KNOW THESE
+- RAID 5
+- RAID 6
+- RAID 10
+
+#### EFS - Elastic File System
+```
+Managed NFS(Network file system) that can be mounted on many EC2 across different AZ
+```
+- **Available across Multilple AZs**
+- Highliy available, scalable, expensive (3xgp2), pay per use
+- Uses NFSv4.1 protocol
+- **Only compatible with Linux based AMI**
+- Uses Security group to control access to EFS
+- Encryption at rest using KMS
+```
+Generally, EFS is very high performant and the scaling is done automatically
+```
+- Performance mode (set when creating the EFS)
+    - General purpose(default): webserver, cms etc
+    - Max I/O (higher latency, throughput) : big data, media processing etc
+- Throughput mode
+    - Bursting (default): 1TB = 50MB/s + burst of up to 100MB/s
+    - Provisioned: set your throughput regardless of size, ex: 1GB for 1TB storage
+- Storage tiers
+    - Standard: for frequently accessed files
+    - Infrequent access(EFS-IA): cost to retrieve files, lower price to store
+
+### LB - Load Balancer
+#### Why use Load Balancer?
+- Spread load across multiple instances
+- Expose a single point of access
+- Handle failures
+- Regular health check
+- SSL termination (HTTPS) for your websites
+- enforce stickiness with cookies
+- High availability across zones
+- Separate private and public traffic
+- AWS takes care of upgrades, maintenance, high availability
+#### 3 Types of load balancer on AWS:
+- Classic LB (v1-old gen) - 2009
+    - Layer 4 - TCP
+    - Layer 7 - HTTP, HTTPS
+    - Health checks are tcp or http based
+    - fixed hostname: XXX.region.elb.amazonaws.com
+- Application LB (v2-new gen) - 2016
+    - Layer 7 - HTTP, HTTPS, WebSocket
+    - Can load balance to multiple applications (e.g. containers)
+    - Can redirect from http to https
+    - Route based on path in URL
+    - Route base on hostname in URL(some.example.com & other.example.com)
+    - Route based on Query string, Headers
+    ```
+    Good for microservices or other container based applications because it has port mapping feature to redirect to a dynamic port in ECS
+    ```
+    - Target groups:
+        - EC2 instances
+        - ECS tasks
+        - Lambda functions
+        - IP addressses
+
+        **ALB can coute to multiple target groups**
+    - fixed hostname: XXX.region.elb.amazonaws.com
+    - x-forwarded-proto = header for forwarded client ip
+- Network LB (v2-new gen) - 2017
+    - Layer 4 - TCP, TLS(Secure TCP) & UDP
+    - Handle millions of request per secons, Less latency
+    - One static IP per AZ
+    - Not included in the AWS free tier
+
+#### Good to know
+- Can setup both private and public LB
+- LBs can scale but not instantaneously
+- ELB access logs will log all access requests
+- Cloudwatch Metris will give you aggregate statistics
+- LB Errors 503 means at capacity or no registered targets
+- Can use cookie to implement stickiniess so that the same client is always redirected to the same instance (only CLB or ALB)
+#### Cross-zone Load Balancing
+``
+If this option is enabled, all of the incoming traffic will be distributed evenly across the instances regardless of which AZs they are in.
+``
+- ALB
+    - always on can`t be disabled
+    - no charges for inter AZ data
+- NLB
+    - disabled by default
+    - you pay charges for inter AZ data
+- CLB
+    - if created through console => enabled by default
+    - if created through CLI/API => disabled by default
+    - No charges for inter AZ data
