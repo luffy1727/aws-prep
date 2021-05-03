@@ -216,6 +216,7 @@ Generally, EFS is very high performant and the scaling is done automatically
     - Layer 7 - HTTP, HTTPS
     - Health checks are tcp or http based
     - fixed hostname: XXX.region.elb.amazonaws.com
+    - Support only one SSL certificate
 - Application LB (v2-new gen) - 2016
     - Layer 7 - HTTP, HTTPS, WebSocket
     - Can load balance to multiple applications (e.g. containers)
@@ -223,6 +224,7 @@ Generally, EFS is very high performant and the scaling is done automatically
     - Route based on path in URL
     - Route base on hostname in URL(some.example.com & other.example.com)
     - Route based on Query string, Headers
+    - Supports multiple listeners with multiple SSL certificates
     ```
     Good for microservices or other container based applications because it has port mapping feature to redirect to a dynamic port in ECS
     ```
@@ -240,7 +242,7 @@ Generally, EFS is very high performant and the scaling is done automatically
     - Handle millions of request per secons, Less latency
     - One static IP per AZ
     - Not included in the AWS free tier
-
+    - Supports multiple listeners with multiple SSL certificates     
 #### Good to know
 - Can setup both private and public LB
 - LBs can scale but not instantaneously
@@ -262,3 +264,33 @@ If this option is enabled, all of the incoming traffic will be distributed evenl
     - if created through console => enabled by default
     - if created through CLI/API => disabled by default
     - No charges for inter AZ data
+## Day 4 notes:
+##### SSL certificates
+- ```The load balancer uses X.509 certificate```
+- ```Can manage certificates using ACM (AWS certificate manager)```
+- Can create/upload your own certificates
+- https listener:
+    - must specify default certificate
+    - can add an optional certs
+    - **Clients can use SNI (Server name idication) to specift the hostname they reach**
+        - SNI solves the problem of loading multiple SSL certificates onto one webserver
+        - only supports ALB, NLB and CloudFront
+
+ ##### Connection Draining
+ ``` "Connection Draining" for CLB or "Deregistration delay" for ALB & NLB```
+- Time to complete "in-flight" requests while the instance is unhealthy or deregistering.```
+- Between 1 to 3600 seconds, default is 300
+- Can be desabled
+#### Auto Scaling Group
+**Attributes:**
+- A launch config
+    - AMI + instance type
+    - EC2 User Data
+    - EBS volumes
+    - Security groups
+    - SSH key pair
+- Min/ Max size/ Init capacity
+- network + subnets information
+- LB information
+- Scaling policies-> what will trigger scale in and out
+![image](images/ASG.png)
