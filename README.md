@@ -294,3 +294,41 @@ If this option is enabled, all of the incoming traffic will be distributed evenl
 - LB information
 - Scaling policies-> what will trigger scale in and out
 ![image](images/ASG.png)
+
+## Day 5 notes:
+##### Scaling policies:
+- Target Tracking Scaling
+    -  Most simple to set up
+    - E.g: I want the average ASG CPU to stay at around 40%
+- Simple/ Step Scaling
+    - if cpu > 70%  + 2 instance elif cpu < 30%  - 1 instance
+- Scheduled Actions
+    - I want +2 instance on Mondays at 2pm
+
+##### Scaling Cooldowns:
+- CD between scaling actions. (kind of obvious if u think about it)
+- In addition to default CD, can create specific cd for **simple scaling policy**
+- `specific cds do not add up, instead they override the default CD`
+- Can/Should override the CD for scale-in(terminate instances) policies
+##### Good to know:
+- ASG Default termination policy:
+1. Find the AZ which has the most number of instances
+2. If there are multiple instances in the AZ to choose from, delete the one with oldest config.
+`ASG tries to balance the number of instances across AZ by default`
+- Lifecycle hooks:
+`Basically an ability to send the instance to a wait state to perform actions before it goes in service or terminated`
+![image](images/lifecycle_hooks.png)
+- Launch Template vs Launch Config
+`Both can choose the specific params such as ID of the AMI, type, key, user data etc but`**always go with the launch template** 
+    
+    - Launch template
+    1. newer
+    2. AWS recommended
+    3. Can have multiple version
+    4. Can create params for re-use and inheritance
+    5. Can provision using both On-demand and spot instances
+    6. Can use t2 unlimited burst feature
+    - Launch config
+    1. old - legacy
+    2. Must be re-created every time you change something
+    
