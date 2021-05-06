@@ -5,7 +5,7 @@ I will be conducting 2 hours(min) study sessions until the day of my test, every
 ##### The session will consist of:
 1. Reviewing past sessions
 2. Watching AWS lessons from udemy (Thank you @lbayarkhuu for the shared lesson)
-3. 1 practice exam on the studied subjects
+3. 1 practice exam on the studied subjects (https://digitalcloud.training/)
 
 ## Day 1 notes:
 
@@ -331,4 +331,92 @@ If this option is enabled, all of the incoming traffic will be distributed evenl
     - Launch config
     1. old - legacy
     2. Must be re-created every time you change something
-    
+
+## Day 6 notes:
+#### AWS RDS:
+- Postgres
+- MySQL
+- MariaDB
+- Oracle
+- Microsoft SQL Server
+- Aurora
+###### Why RDS over deploying DB on EC2?
+- Automated provisioning, OS patching
+- Continuous backups and restore to specific timestamp
+- Monitoring dashboard
+- Read replicas for improved read peformance
+- Multi AZ setup for Disaster Recoivery
+- Maintenance windows for upgrades
+- Scaling capability (vertical and horizontal)
+- Storage backed by EBS (gp2 or io1)
+- **BUT you can`t ssh into your instances** 
+
+`RDS - Backups`
+Automated Backups:
+- Daily backup (during maintenance window)
+- Transaction logs are backed up by RDS every 5 minutes
+- Ability to restore to any point in time
+- 7 days retention (can be increased to 35)
+- DB Snapshots are manually triggered by the user
+
+`RDS - Storage Auto Scaling`
+Have to set Maximum storage threshold.
+Automatically modifiy storage if:
+- Free storage < 10% allocated storage
+- Low storage lasts at least 5 minutes
+- 6 hours have passed since last modification
+
+`RDS - Read Replicas`
+- up to 5 read replicas
+- has 3 scope options 
+    - Within AZ (free)
+    - Cross AZ (free)
+    - Cross Regions ($$$)
+- Replication is async
+- Replicas can be promoted to their own DB (oh geez im a real DB now)
+- Applications must update the connection string to leverage read replicas. (I actually don`t understand this sentence)
+
+`RDS - Multi AZ(Disaster Recovery)`
+- Sync Replication
+- One DNS name
+- Increase availability
+- Failover in case of loss of AZZ, los of network, instance or storage failure
+- Not used for scaling
+##### Good to know:
+- The READ replicas can be setup as the standy DB for multi AZ
+- From single AZ to Multi Az operation has zero downtime
+
+`RDS Security - Encryption`
+- At rest encryption
+    - Possibility to encrypt the master & read replicas with AWS KMS
+    - Encryption is defined at launch time
+    - **If the master is not encrypted, the read replicas cannot be encryped**
+    - Transparent Data Encryption (TDE) available for Oracle and SQL server
+- In-flight encryption
+    - Obviously SSL certficate to encrypt data to RDS in flight
+    - Provide SSL options wtih trust certificate when connecting to db
+    - To **enforce** SSL:
+        - PostgreSQL: rds.force_ssl =1 in the AWS RDS console
+        - MySQl: Within the DB:
+        ```GRANT USAGE ON *.* 'mysqluser'@%' REQUIRE SSL;```
+
+`RDS Security - Network * IAM`
+- Network Security
+    - RDS databases are usually deployed within a private subnet, not in a public one
+    - RDS security works by leveraging security groups
+- Access Management
+    - IAM policies help control who can manage AWS RDS (who can delete, create read replica etc)
+    - Uses normal username & password to login to the database. 
+    - However, IAM-based authentication can be used to login into RDS with MySQL & PostgreSQL
+ #### AWS Aurora
+ Faster, better MySQL
+ - failover is basically instant
+ - storage grows automatically
+ - can have 15 replicas
+ - replication is much faster
+ - cloud native
+ - cost is 20% more
+ ![image](images/aurora.png)
+ - Has writer DNS
+ - Has reader DNS 
+ - Can create custom endpoint for the read replicas. However, when custom endpoint is created, the default endpoint gets removed. 
