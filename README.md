@@ -419,4 +419,64 @@ Automatically modifiy storage if:
  ![image](images/aurora.png)
  - Has writer DNS
  - Has reader DNS 
- - Can create custom endpoint for the read replicas. However, when custom endpoint is created, the default endpoint gets removed. 
+ - Can create custom endpoint for the read replicas. However, when custom endpoint is created, the default endpoint gets removed.
+
+## Day 7 notes:
+#### AWS ElastiCache
+`AWS managed Redis or Memcached`
+- Redis
+    - Multi AZ with auto failover
+    - Read replicas to scale reads
+    - High availability
+    - Data durability using AOF persistence
+    - Backup and restore features
+    **this is basically memory RDS**
+- Memcached
+    - Multi-node for partitioning of data(sharding)
+    - No high availablity
+    - non persistent
+    - no backup and restore
+    - multi-threaded architecture
+
+`Elasticache Security`
+- All cache in Elasticache
+    - do not support IAM authentication
+    -
+- Redis AUTH
+    - you can set password/token when you create redis
+    - support SSL in flight encryption
+- Memcached
+    - Supports SASL-based authentication
+`Pattersn for ElastiCache`
+- Lazy loading: all the read data is cached, data can become stale in cache
+- Write through: Adds or update data in the cache when written to a DB
+- Session store: stor temp session data in cache
+
+`Redis Sorted Sets`
+- Gurantee bothh uniqueness and element ordering
+#### AWS Route 53
+`is basically a AWS managed DNS`
+In AWS, the most common records are:
+- A: hostname to IPv4
+- AAAA: hostname to IPv6
+- CNAME: hostname to hostname
+    - app.mydomain.com => test.anything.com
+    - DOES NOT WORK FOR ROOT DOMAIN
+    (has to be something like app.tushig.com not tushig.com)
+- Alias: hostname to AWS resource
+    - app.mydomain.com => test.amazonaws.com
+    - WORKS FOR ROOT DOMAIN
+    - free of charge
+    - Native health checks
+
+Route 53 can use 
+- public domain names you own
+- private domain names that can be resolved only your private VPCs
+
+Route53 is a global service
+
+You pay $0.50 per month per hosted zone
+
+
+
+
