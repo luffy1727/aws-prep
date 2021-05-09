@@ -477,6 +477,106 @@ Route53 is a global service
 
 You pay $0.50 per month per hosted zone
 
+## Day 8 notes:
 
+#### AWS S3:
+- AWS buckets global unique name
+- AWS buckets region based service
+- You don`t actually create directories within buckets but instead you create objects with very long "keys"
+- The **key** is the FULL path
+    - s3://my-bucket/*my_folder/somefolder/photos.gif*
+    - "*my_folder/somefolder/photos.gif*" is the key
 
+##### S3 Object:
+- Object values are the content of the body
+    - Max object size is 5TB
+    - if uploading more than 5gb, use `multi-part upload`
+- Metadata
+- Tags
+- Version ID
+    - enabled at the bucket level
+    - same key will just increase the version
+    - Any file before versioning will have *null* as a version
+    - When deleting versioning option it does not delete the previous versions
 
+##### S3 Encryption:
+###### 4 methods of encrypting:
+`SSE short for server side encryption`
+- SSE-S3:
+    - AWS handles the keys
+    - AES-256
+    - must set header: "x-amz-server-side-encryption": "AES256"
+- SSE-KMS:
+    - AWS Key management service to manage keys
+    - gives control on who has what keys + audit trail
+    - must set header:
+    "x-amz-server-side-encryption": "aws:kms"
+- SSE-C:
+    - When you want to manage keys
+    - S3 does not store the encryption key you provide
+    - HTTPS **must** be used
+    - Encryption key must be provided in every http headers.
+    - Must use the data key when retrieving
+- Client side encryption: 
+    - Client library such as the AWS s3 encryption cleint
+    - basically encrypts the file and sends it to s3. (same logic applies to retrieving)
+##### S3 Security:
+- User based
+    - IAM policies - who can access this API etc
+- Resource based
+    - Bucket policies - bucket wide rules
+    - Object access control list
+    - Bucket access control list
+##### S3 MFA-Delete
+- Can only be done using CLI
+- Only the bucket owner(root account) can enable/disable MFA-Delete
+##### S3 Access logs
+- AWS Athena
+- **DO NOT set your logging bucket to be the monitored bucket** (it will create a logging loop)
+##### S3 Replication (CRR & SRR)
+- Must enable versioning in source and destination
+- Does not copy the existing files
+- Any DELETE operation is not replicated
+- There is no "chaining" effect of replication
+- Cross region replication
+    - Use cases: compliance, lower latency access, preolication across accounts
+
+- Same region replication
+    - log aggregation, live replication between prod and test accounts
+- Buckets can be in different accounts
+- Copying is async
+- must give proper IAM permissions to S3
+##### S3 Storage Classes
+- Amazon S3 Standard - General purpose
+    - High durability (99.999999999%) of objects across multiple AZ
+    - Sustain 2 concurrent facility failures
+- Amazon S3 Standard - Infrequent Access (IA)
+    - lower cost than s3 standard
+    - Use cases: Data store for disaster recovery, backup
+- Amazon S3 One Zone - Infrequent Access
+    - 99.5% availability
+    - Low cost compared to IA (by 20%)
+    - Use Cases: Storing secondary backup copies of on-premise data, or data you can re-create(thumbnails etc)
+- Amazon S3 Intelligent Tiering
+    - Small monthly monitoring and auto-tiering fee
+    - Automatically moves objects between `General purpose` and `IA`
+- Amazon Glacier
+    - Cold archive/backup
+    - Data is retained for longer term (10s of years)
+    - Alternative to on-premise magnetic tape storage
+    - cost per storage per month ($0.004/ GB) + retrievel fee
+    - each item in Glacier is called "Archive" (up to 40TB)
+    - Archives are stored in "Vaults"
+    - 3 retrieval options:
+        - Expedited (1 to 5 minutes)
+        - Standard (3 to 5 hours)
+        - Bulk (5 to 12 hours)
+    - Minimum storage duration of 90 days
+- Amazon Glacier Deep Archive
+    - 3 retrieval options:
+        - Standard (12 hours)
+        - Bulk (48 hours)
+    - Min storage duration 180 days.
+    - cheaper
+
+![image](images/s3_storage.png)
