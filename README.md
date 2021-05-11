@@ -580,3 +580,54 @@ You pay $0.50 per month per hosted zone
     - cheaper
 
 ![image](images/s3_storage.png)
+
+## Day 8 notes:
+
+##### S3 Performance
+- Can get 3500 PUT/COPY/POST/DELETE and 5500 GET/HEAD requests per second per prefix in a bucket
+    - example:
+    - bucket/folder1/sub1/file => prefix: /folder1/sub1
+    - bucket/folder1/sub2/file => prefix: /folder1/sub2
+    Will get the performance for each prefix!
+- Can be limited by KMS limitations
+- Multi-part Upload:
+    - recommended for files > 100MB
+    - required for files > 5GB
+    - parallel upload by divide and conquer
+- Transfer acceleration
+    - increase transfer speed by transferring the file to edge location first which will forward the data to the s3 location
+    ![image](images/accelerator.png)
+- S3 Byte-Range Fetches
+    - Divide and conquer for fetch/get requests
+
+##### S3 Requester Pays
+- Basically the person who is requesting the object will pay for the networking cost for retreiving the object.
+- The requester must be authenticated in AWS (pretty obvious)
+- Helpful when sharing large items with other accounts
+##### AWS Athena
+- Serverless
+- Analytics against S3
+- Uses SQL language
+- has JDBC / ODBC driver
+- Charged per query and amount of data scanned
+- Supports CSV, JSON, ORC, Avro and Parquet
+`Whenever you want to analyze something on S3 (logs): Use Athena`
+
+### AWS Lambda:
+- Easy pricing
+    - Pay per request and compute time
+    - Free tier of 1,000,000 AWS Lambda requests and 400,000 GBs of compute time
+- Easy monitoring with AWS CloudWatch
+- Increasing RAM will also improve CPU and network
+##### AWS Lambda Limits:
+- Execution
+    - Memory Allocation: 128MB - 10GB(64MB increments)
+    - Maximum execution time: 900 seconds(15 minutes)
+    - Environment variables(4KB)
+    - Disk capacity in the "function container" (in /tmp): 512MB
+    - Concurrent executions: 1000 (can be increased)
+- Deployment:
+    - Lambda function deployment compressed size: 50MB
+    - Uncompressed: 250MB
+    - Can use /tmp to load files at startup
+    - size of env variables: 4KB
