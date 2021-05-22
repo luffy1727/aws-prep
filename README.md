@@ -631,3 +631,100 @@ You pay $0.50 per month per hosted zone
     - Uncompressed: 250MB
     - Can use /tmp to load files at startup
     - size of env variables: 4KB
+
+#### DynamoDB
+- Fully managed, Highly available with replication across 3AZ
+- NoSQL
+- Scales to massive workloads, dist database
+- Millions of req per seconds, trillions of row, 100s of TB of storage
+- Fast and consistent in performance
+- Integrated with IAM for security, authorization and administration
+- Enables event driven programming with DynamoDB streams
+- Low cost and auto scaling capabilities
+
+##### DynamoDB - Dax
+- Cache for DynamoDB
+- Solves hot key problem
+- 5 minutes TTL by default
+- Up to 10 nodes in the cluster
+- Multi AZ
+- Secure
+
+##### DynamoDB - Streams
+- Changes in DynamoDB (Create, Update, Delete) can end up in a DynamoDB Stream
+- This stream can be read by AWS lambda
+    - React to changes in real time (welcome email etc)
+    - analytics
+    - elasticserach
+- Could implement Cross Region Replication using Streams
+- Stream has 24 hours of data retention
+
+##### DynamoDB - New Features
+- Transactions
+    - All or nothing type of operations
+    like SQL flush type stuff
+- On demand
+    - No capacity planning needed
+    - 2.5x more expensive than provisioned capacity
+- Global Tables(Cross Region Replication)
+    - Active replication
+    - Must enable streams
+    - Usefol for low latency, DR purposes
+- Capacity planning
+    - Planned capacity: provision WCU & RCU, can enable auto scaling
+    - On-demand capacity: get unlimited WCU & RCU, no throttle, more expensive
+
+#### AWS API Gateway
+- AWS lambda + API gateway: no infra to manage
+- Support for the websocket protocol
+- Handles API versioning
+- Handles different environments
+- Handles security
+- Create API keys, handle request throttling
+- Swagger / Open API import to quickly define APIs
+- Transform and validate requests and responses
+- Generate SDK and API specifications
+- Cache API responses
+
+
+## Day 9 notes:
+
+
+#### AWS CloudFront:
+- is CDN
+- Improves erad perf, content is cached at the edge
+- 216 Point of Presence globally
+- DDoS protection, integration with Shield, AWS web application Firewall
+- Can expose external HTTPS and can talk to internal HTTPS backends
+
+##### Cloudfront Pricing
+- The cost of data out per edge location varies(More data less cost)
+- You can reduce the number of edge locations for cost reduction
+- 3 price classes:
+    1. Class All: all regions - best performance
+    2. Class 200: most regions, but excludes the most expensive regions
+    3. Class 100: only the last expensive regions
+##### CloudFront vs S3 Cross Region Replication
+
+- CloudFront:
+    - Global Edge network
+    - Files are cached for a TTL
+    - Great for **static** content that must be available **everywhere**
+- S3 CRR:
+    - Must be setup for each region
+    - Files are updated in near real-time
+    - Read only
+    - Great for **dynamic** content that needs to be available at low-latency in **few regions**
+
+##### CloudFront Signed URL / Signed Cookies vs S3 Signed URLS 
+- Cloud Front Signed URL
+    - Allow access to a path, no matter the origin
+    - Account wide key-pair, only the root can manage it
+    - Can filter by IP, path, date, expiration
+    - Can leverage caching features
+- S3 Pre-Signed URLs
+    - Issue a request as the person who signed the URL
+    - Uses the IAM key of the signing IAM principal
+    - Limited lifetime
+
+![image](images/cloudfront-signed-url.png)
