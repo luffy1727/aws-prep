@@ -421,6 +421,11 @@ Automatically modifiy storage if:
  - Has reader DNS 
  - Can create custom endpoint for the read replicas. However, when custom endpoint is created, the default endpoint gets removed.
 
+#### AWS Redshift
+ - Based on PostgreSQL, not used for OLTP (online transaction processing)
+ - is OLAP (analytics)
+ - 10x better performance than other data warehouses,
+
 ## Day 7 notes:
 #### AWS ElastiCache
 `AWS managed Redis or Memcached`
@@ -685,14 +690,14 @@ You pay $0.50 per month per hosted zone
 - Transform and validate requests and responses
 - Generate SDK and API specifications
 - Cache API responses
+- API owners can set a rate limit of 1,000 requests per second for a specific method in their REST APIs (returns 429 HTTP response when the limit is exceeded) 
 
 
 ## Day 9 notes:
 
-
 #### AWS CloudFront:
 - is CDN
-- Improves erad perf, content is cached at the edge
+- Improves read performance, content is cached at the edge
 - 216 Point of Presence globally
 - DDoS protection, integration with Shield, AWS web application Firewall
 - Can expose external HTTPS and can talk to internal HTTPS backends
@@ -728,3 +733,44 @@ You pay $0.50 per month per hosted zone
     - Limited lifetime
 
 ![image](images/cloudfront-signed-url.png)
+
+## Day 10 notes:
+
+### Networking - VPC
+
+##### CIDR - IPv4
+
+`
+10.0.100.0/32
+`
+- 10.0.100.0 - Base IP
+- /32 - Subnet Mask
+
+10.0.100.0/n = 10.0.100.0 - 2^(32-n)
+
+/32 allows for 1 IP = 2^0
+/31 allows for 2 IP = 2^1
+etc
+
+- `10.0.0.0 - 10.255.255.255` -> Big private network
+- `172.16.0.0 - 172.31.255.255` -> Default AWS range
+- `192.168.0.0 - 192.168.255.255` -> home network
+
+**AWS RESERVES 5 IP ADDRESS FROM EACH ALLOCATED CIDR BLOCK**
+
+
+# Practice tests
+
+### Practice test numero uno, attempt one
+`Result : 34/65 `
+`Percentage: 52%` 
+- Notes:
+    - DDOS = AWS Shield
+    - Messaging broker = Amazon MQ
+    - EFS-IA lifecycle policy max day = 90
+    - **AWS Resource Access Manager (RAM)** is a service that enables you to easily and securely share AWS resources with any AWS account or within your AWS Organization. You can share AWS Transit Gateways, Subnets, AWS License Manager configurations, and Amazon Route 53 Resolver rules resources with RAM.
+    - **Amazon Macie** is an ML-powered security service that helps you prevent data loss by automatically discovering, classifying, and protecting sensitive data stored in Amazon S3
+    - Always remember that the messages in the SQS queue will continue to exist even after the EC2 instance has processed it, **until you delete that message**
+    - Active directory = Microsoft Active Directory xD
+    - Memory utilization is not readily available in CloudWatch
+    - Need to find out what Direct connect and File gateway are.
