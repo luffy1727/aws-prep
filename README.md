@@ -4,7 +4,7 @@ I will be conducting 2 hours(min) study sessions until the day of my test, every
 
 ##### The session will consist of:
 1. Reviewing past sessions
-2. Watching AWS lessons from udemy (Thank you @lbayarkhuu for the shared lesson)
+2. Watching AWS lessons from udemy (Thank you @lbayarkhuu for the shared account)
 3. 1 practice exam on the studied subjects (https://digitalcloud.training/)
 
 ## Day 1 notes:
@@ -774,3 +774,17 @@ etc
     - Active directory = Microsoft Active Directory xD
     - Memory utilization is not readily available in CloudWatch
     - Need to find out what Direct connect and File gateway are.
+### Practice test #2, attempt one
+`Result : 34/65`
+`Percentage: 52%` 
+- Notes:
+    - ECS with open source = EKS
+    - You must install the CloudWatch agent on the instance to view **SwapUtilization** metric
+    - You can use Amazon SNS message filtering to assign a filter policy to the topic subscription
+    - If it is moving large amount of data, it is almost always AWS Snowball
+    - To host a static web on S3 and routing with 53, the bucket name and the domain has to be same(if i want tushig.fucking.sucks.com the bucket name has to be tushig.fucking.sucks)
+    - assess and audit all the configurations in their AWS account => AWS Config
+    - Since it is a Windows bastion, you should allow RDP access and not SSH as this is mainly used for Linux-based systems.
+
+### Practice test #3, attempt one
+17, 31, 32, 45, 53, 55
