@@ -787,4 +787,14 @@ etc
     - Since it is a Windows bastion, you should allow RDP access and not SSH as this is mainly used for Linux-based systems.
 
 ### Practice test #3, attempt one
-17, 31, 32, 45, 53, 55
+`Result : 39/65`
+`Percentage: 60%` Definitely could`ve gotten better
+- Notes:
+    - Cannot use standby RDS instance for read operations while primary instance running
+    - A Kinesis data stream stores records from 24 hours by default to a maximum of 168 hours.
+    - `Active-Active` failover - When you want *all* your resources available 
+    - `Active-Passive` failover - When you want your *primary* resource available 
+    - The largest object that can be uploaded to S3 in a single PUT is 5 GB 
+    - 1 subnet maps 1 AZ
+    - Columnar data = AWS Redshift
+    - There is a vCPU-based On-Demand Instance limit per region
