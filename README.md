@@ -774,9 +774,17 @@ etc
     - Active directory = Microsoft Active Directory xD
     - Memory utilization is not readily available in CloudWatch
     - Need to find out what Direct connect and File gateway are.
+### Practice test numero dos
+`Result : 44/65 `
+`Percentage: 67%` 
+- Notes:
+    - TAPE = slow
+    - **AWS Directory Service Simple AD** provides subset of features of **AWS Directory Service**
+    - Read questions more carefully i guess haha
+    
 ### Practice test #2, attempt one
 `Result : 34/65`
-`Percentage: 52%` 
+`Percentage: 52%`
 - Notes:
     - ECS with open source = EKS
     - You must install the CloudWatch agent on the instance to view **SwapUtilization** metric
@@ -798,3 +806,13 @@ etc
     - 1 subnet maps 1 AZ
     - Columnar data = AWS Redshift
     - There is a vCPU-based On-Demand Instance limit per region
+
+### Practice test #4, attempt one
+`Result : 38/65`
+`Percentage: 58%` Definitely could`ve gotten better
+- Notes:
+    9.11.14.17.21.26.28.30.33 it says enhanced but idk ?.34.39.
+    - **Magnetic volumes** provide the lowest cost per gigabyte of all EBS volume types and are ideal for workloads where data is accessed infrequently, and applications where the lowest storage cost is important.
+    - **An Elastic Fabric Adapter (EFA)** is a network device that you can attach to your Amazon EC2 instance to accelerate High Performance Computing (HPC) and machine learning applications.
+    - Weirdly, A **storage optimized instance** is designed for workloads that require high, sequential read and write access to very large data sets on local storage. 
+    - **Transit Gateway**![image](images/transit-gateway.png)
